@@ -132,6 +132,30 @@ for result in results_schedules:
   
     #print( SENSOR_VALUE, SENSOR_TEST, TEST_VALUE, SCHED_TEST_SENSORS )
 
+
+  # Check network devices
+
+  cursorselect = cnx.cursor()
+  query = "SELECT * FROM network INNER JOIN sched_network ON network.id=sched_network.network_id AND sched_network.sched_id="+SCHED_ID+";";
+  cursorselect.execute(query)
+  results_network =cursorselect.fetchall()
+  cursorselect.close()
+  for result in results_network:
+      print(result[7])
+  TEST = 0
+  
+  if not results_network:
+    SCHED_TEST_NETWORK = True 
+  else:
+    for result in results_network:
+      if (result[3] == result[7]):
+        TEST += 1
+
+    if TEST == 0:
+      SCHED_TEST_NETWORK = False
+    else:
+      SCHED_TEST_NETWORK = True
+
   # Check modes
 
   cursorselect = cnx.cursor()
@@ -165,7 +189,8 @@ for result in results_schedules:
     print( MODE_VALUE, MODE_TEST, TEST_VALUE, SCHED_TEST_MODES )  
  
     print( '- - - - - - - - - - - - - - ' )
-    # Check timers
+    
+  # Check timers
   
   cursorselect = cnx.cursor()
   query = "SELECT timers.value, sched_timer.value FROM timers INNER JOIN sched_timer ON timers.id = sched_timer.timer_id AND sched_timer.sched_id ="+SCHED_ID+";"
@@ -198,9 +223,9 @@ for result in results_schedules:
   
   
 
-  print( SCHED_TEST_TIME, SCHED_TEST_DAY, SCHED_TEST_SENSORS, SCHED_TEST_MODES, SCHED_TEST_TIMERS )
+  print( SCHED_TEST_TIME, SCHED_TEST_DAY, SCHED_TEST_SENSORS, SCHED_TEST_MODES, SCHED_TEST_TIMERS, SCHED_TEST_NETWORK )
 
-  if ( SCHED_TEST_TIME and SCHED_TEST_DAY and SCHED_TEST_SENSORS and SCHED_TEST_MODES and SCHED_TEST_TIMERS  == True):
+  if ( SCHED_TEST_TIME and SCHED_TEST_DAY and SCHED_TEST_SENSORS and SCHED_TEST_MODES and SCHED_TEST_NETWORK and SCHED_TEST_TIMERS  == True):
     print( "activate" )
     query = ("UPDATE schedules SET active = 1 WHERE id ='"+SCHED_ID+"';")
   else:

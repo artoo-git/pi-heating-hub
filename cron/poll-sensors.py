@@ -33,16 +33,14 @@ for i in results:
   sensor_id = i[0]
   sensor_ref = i[1]
   sensor_ip = i[2]
-  
-    
-  sensor_url = "http://"+sensor_ip+":8080/value.php?id="+sensor_ref
+  print sensor_id 
+  sensor_url = "http://"+sensor_ip+"/value.php?id="+str(sensor_id)
 
   print sensor_url
-  
   try:
-    data = float( urllib2.urlopen(sensor_url).read() )  
+   data = float( urllib2.urlopen(sensor_url).read() ) 
   except:
-    data = 'NULL'
+   data = 'NULL'
     
   print data
   print sensor_id

@@ -62,7 +62,7 @@
             
             
             
-            $subnet_cidr = '192.168.1.0/24';
+            $subnet_cidr = '192.168.1./24';
             
             $subnet_scan = shell_exec('nmap -sP $subnet_cidr | grep report | grep -v router | cut -d" " -f5');
             
@@ -72,11 +72,11 @@
             
             foreach( $subnet_devices as $device_ip ) {
                 set_error_handler(function() { $sensor_count = '0'; });
-                $sensor_count = file_get_contents("http://".$device_ip.":8080/count.php");
+                $sensor_count = file_get_contents("http://".$device_ip."/count.php");
                 restore_error_handler();
                 if( $sensor_count > 0 ) {
                     for ($sensor_ref =1 ; $sensor_ref <= $sensor_count; $sensor_ref++) { 
-                        $sensor_name = file_get_contents("http://".$device_ip.":8080/name.php?id=".$sensor_ref);
+                        $sensor_name = file_get_contents("http://".$device_ip."/name.php?id=".$sensor_ref);
                         $sensor_unit = "deg C";
                         $sql = "INSERT INTO sensors (ip, ref, name, unit) select '".$device_ip."', '".$sensor_ref."', '".$sensor_name."', '".$sensor_unit."' from  dual WHERE not exists (SELECT 1 FROM sensors WHERE ip='".$device_ip."' AND ref='".$sensor_ref."');";
                         $result = mysqli_query($conn, $sql);

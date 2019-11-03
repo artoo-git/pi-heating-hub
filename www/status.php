@@ -276,7 +276,7 @@
         "-nTITLE:10",
         "-nAXIS:12",
         "-nUNIT:10",
-        "-y 1:5",
+    #    "-y 1:5",
         "-cFRAME#1a1a1a",
         "-cARROW#1a1a1a",
         "DEF:callmax=$rrdfile:data:MAX",

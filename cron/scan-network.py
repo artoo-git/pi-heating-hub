@@ -31,7 +31,7 @@ cursorread.execute(query)
 results =cursorread.fetchall()
 cursorread.close()
 
-network_data = subprocess.check_output('sudo nmap -sP 192.168.0.0/24', shell=True)
+network_data = subprocess.check_output('sudo nmap -sP 192.168.1.1-100', shell=True)
 
 print network_data
 
@@ -39,7 +39,7 @@ for i in results:
   network_id = i[0]
   network_mac = i[1]
 
-  print network_mac
+#  print network_mac
     
   if network_mac in network_data:
     data = 1
