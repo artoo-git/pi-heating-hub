@@ -1,7 +1,6 @@
 <!DOCTYPE HTML>  
 <html>
 <head>
-<meta http-equiv="refresh" content="30">
 <style>
     .sensorvalue {font-family: courier; color: green; font-size:200pt;}
     .sensorvaluedec {font-family: courier; color: green; font-size:80pt;}
@@ -28,11 +27,11 @@
 <body class='pbody'>
     
 <?php
-    
+    header("refresh:30;");
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
-
+	
     $ini_array = parse_ini_file("/home/pi/pi-heating-hub/config/config.ini", true);
     
     $servername = $ini_array['db']['server'];
@@ -126,7 +125,12 @@
     if (mysqli_num_rows($result_timers) == 0) {
         #echo "0 timers results"; 
     }
-
+    
+    $sql_active = "SELECT name from schedules WHERE active = 1;";
+    $result_active = mysqli_query($conn, $sql_active);
+    if (mysqli_num_rows($result_active) == 0) {
+        #echo "No active schedules"; 
+    }
 
     echo "<table class='ttab'>";
     echo "<tr>";
@@ -212,6 +216,16 @@
     
     echo "<table class='ttab'>";
     echo "<tr>";
+    while($row = mysqli_fetch_assoc($result_active)) {
+	$ACTIVE = $row["name"];
+	if (is_null($ACTIVE)){
+		echo "<center>Active schedule: <b>none</b></center>"; 
+   	}else{ 
+		echo "<center>Active schedule: <b>" . $ACTIVE . "</b></center>"; 
+	}
+    }
+ 
+
     echo "<td width=1% align=center>";
 
     $sql = "SELECT * FROM sensors;";
@@ -235,7 +249,7 @@
     echo "<td width=99% align=center>";
 
     if( $SENSOR_NAME != '' ) {
-        create_graph( $rrd_dir.$GET_GRAPH_ID.".rrd", $img_dir.$GET_GRAPH_ID.$GET_GRAPH_SP.".png", 	$GET_GRAPH_SP, 	$SENSOR_NAME,	 	   "180", "700");
+        create_graph( $rrd_dir.$GET_GRAPH_ID.".rrd", $img_dir.$GET_GRAPH_ID.$GET_GRAPH_SP.".png", 	$GET_GRAPH_SP, 	$SENSOR_NAME,	 	   "280", "700");
         echo "<img src='".$img_dir.$GET_GRAPH_ID.$GET_GRAPH_SP.".png' alt='RRD image'>";  
     }
     
@@ -263,7 +277,7 @@
         "--start", $start,
         "--title=$title",
         "--vertical-label=Temperature",
-    #    "--lower=0",
+   #     "--lower-limit=0",
         "--height=$height",
         "--width=$width",
         "-cBACK#1a1a1a",
@@ -271,20 +285,24 @@
         "-cSHADEA#1a1a1a",
         "-cSHADEB#1a1a1a",
         "-cFONT#c7c7c7",
-        "-cGRID#888800",
-        "-cMGRID#ffffff",
+        "-cGRID#77774470",
+        "-cMGRID#ffffff00",
         "-nTITLE:10",
-        "-nAXIS:12",
-        "-nUNIT:10",
-    #    "-y 1:5",
+   #    "-nAXIS:10",
+   	"-nUNIT:10",
         "-cFRAME#1a1a1a",
-        "-cARROW#1a1a1a",
+	"-cARROW#1a1a1a",
+#	"--alt-y-grid",
         "DEF:callmax=$rrdfile:data:MAX",
-        "CDEF:transcalldatamax=callmax,1,*",
-        "AREA:transcalldatamax#a0b84240",
-        "LINE4:transcalldatamax#a0b842",
-    #    "LINE4:transcalldatamax#a0b842:Calls",
-    #    "COMMENT:\\n",
+   	"CDEF:transcalldatamax=callmax,1,*",
+	"CDEF:smooth=callmax,300,TREND",
+	"CDEF:predict=86400,-7,1800,callmax,PREDICT",
+        "AREA:transcalldatamax#a6684210",
+    #    "LINE1:transcalldatamax#a66842:readings",
+    	"LINE1:predict#477842:prediction",
+ 	"LINE1:smooth#aaaaaa:temp",
+
+    #    "COMMENT:\\n",e
     #    "GPRINT:transcalldatamax:LAST:Calls Now %6.2lf",
     #    "GPRINT:transcalldatamax:MAX:Data %6.2lf"
         "COMMENT:\\n"
