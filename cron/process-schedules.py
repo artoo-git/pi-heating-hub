@@ -109,28 +109,28 @@ for result in results_schedules:
   SCHED_TEST_SENSORS = True
   
   for result in results_sensors:
-    #print( result )
     if ( result[4] != None ):
     
       SENSOR_VALUE= float(result[4])
       SENSOR_TEST = str(result[9])
       TEST_VALUE = float(result[10])
-
-      if (  SENSOR_TEST == '<' and SENSOR_VALUE < TEST_VALUE ):
+      
+      if (  SENSOR_TEST == '<' and SENSOR_VALUE <  TEST_VALUE ):
         TEST = True
       elif( SENSOR_TEST == '=' and SENSOR_VALUE == TEST_VALUE ):
         TEST = True
       elif( SENSOR_TEST == '!' and SENSOR_VALUE != TEST_VALUE ):
         TEST = True
-      elif( SENSOR_TEST == '>' and SENSOR_VALUE > TEST_VALUE ):
+      elif( SENSOR_TEST == '>' and SENSOR_VALUE >  TEST_VALUE ):
         TEST = True
       else:
         TEST = False
+    else:
+      TEST = False
 
-      if TEST == False:
-        SCHED_TEST_SENSORS = False
-  
-    #print( SENSOR_VALUE, SENSOR_TEST, TEST_VALUE, SCHED_TEST_SENSORS )
+    if TEST == False:
+      SCHED_TEST_SENSORS = False
+    print( SENSOR_VALUE, SENSOR_TEST, TEST_VALUE, SCHED_TEST_SENSORS )
 
 
   # Check network devices
@@ -171,7 +171,7 @@ for result in results_schedules:
   SCHED_TEST_MODES = True
    
   for result in results_modes:
-    #print( result )
+    print( result )
     MODE_VALUE= bool(result[2])
     MODE_TEST = str(result[6])
     TEST_VALUE = bool(result[7])
