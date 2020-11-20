@@ -9,6 +9,7 @@
     .debug { font-family: courier; color: red; font-size: large; }
     .error { color: #FF0000; }
     .ttab  { width: 100%; }
+    .ttab2 {border:0px;width:100%; text-align:left; border-collapse: collapse;}
     .tcol  { font: 22px arial; }
     .tspan { font: 22px arial; color: grey; }
     .dcolname   { text-align: left; padding: 0 0 0 32px; }
@@ -132,6 +133,9 @@
         #echo "No active schedules"; 
     }
 
+    $sql_network = "SELECT name FROM network where value = 1;";
+    $phone_home = mysqli_query($conn, $sql_network);
+
     echo "<table class='ttab'>";
     echo "<tr>";
 
@@ -143,10 +147,20 @@
     echo "<input type='button' onclick='location.href=\"modes-list.php\";' value='Modes' class='bgrey' />";    
     echo "<input type='button' onclick='location.href=\"timers-list.php\";' value='Timers' class='bgrey' />";    
     echo "<input type='button' onclick='location.href=\"netdevices-list.php\";' value='Connected Devices' class='bgrey' />";    
+    echo "<table class = 'ttab2'> ";
+    echo "<tr style = 'height:20px'></tr>";
+    while($row = mysqli_fetch_assoc($phone_home)) {
+      echo "<tr><td style = 'padding: 5px; border: 0px'>" . $row["name"] . " is home </td></tr>";
+    }
+    echo "</table>";
+	
 
-    echo "</td>";
+    echo "</td> ";
 
     echo "<td width=33%>";
+   
+
+
 
     $SENSOR_NAME =  '';
     $SENSOR_VALUE = '';
