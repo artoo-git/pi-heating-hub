@@ -2,9 +2,9 @@
 <html>
 <head>
 <style>
-    .sensorvalue {font-family: courier; color: green; font-size:200pt;}
-    .sensorvaluedec {font-family: courier; color: green; font-size:80pt;}
-    .sensorname {font-family: courier; color: green; font-size:28pt;}
+    .sensorvalue {font-family: Arial; color: green; font-size:200pt;}
+    .sensorvaluedec {font-family: Arial; color: green; font-size:80pt;}
+    .sensorname {font-family: arial; color: green; font-size:28pt;}
     .pbody { background-color: #080808; font-family: courier; color: red; font-size: small;}
     .debug { font-family: courier; color: red; font-size: large; }
     .error { color: #FF0000; }
@@ -150,7 +150,7 @@
     echo "<table class = 'ttab2'> ";
     echo "<tr style = 'height:20px'></tr>";
     while($row = mysqli_fetch_assoc($phone_home)) {
-      echo "<tr><td style = 'padding: 5px; border: 0px'>" . $row["name"] . " is home </td></tr>";
+      echo "<tr><td style = 'padding: 5px; border: 0px'>" . $row["name"] . " is connected </td></tr>";
     }
     echo "</table>";
 	
@@ -263,7 +263,7 @@
     echo "<td width=99% align=center>";
 
     if( $SENSOR_NAME != '' ) {
-        create_graph( $rrd_dir.$GET_GRAPH_ID.".rrd", $img_dir.$GET_GRAPH_ID.$GET_GRAPH_SP.".png", 	$GET_GRAPH_SP, 	$SENSOR_NAME,	 	   "280", "700");
+        create_graph( $rrd_dir.$GET_GRAPH_ID.".rrd", $img_dir.$GET_GRAPH_ID.$GET_GRAPH_SP.".png", 	$GET_GRAPH_SP, 	$SENSOR_NAME,	 	   "380", "700");
         echo "<img src='".$img_dir.$GET_GRAPH_ID.$GET_GRAPH_SP.".png' alt='RRD image'>";  
     }
     
@@ -271,13 +271,14 @@
     echo "</table>";
 
     echo "<table class='ttab'><tr><td>";
-    echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-1h\";' value='One hour' class='bgrey' />";
     echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-3h\";' value='Three hours' class='bgrey' />";
     echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-12h\";' value='Twelve hours' class='bgrey' />";
     echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-24h\";' value='One Day' class='bgrey' />";
     echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-3d\";' value='Three Days' class='bgrey' />";
     echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-1w\";' value='One week' class='bgrey' />";
     echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-1m\";' value='One month' class='bgrey' />";
+    echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-3m\";' value='Three months' class='bgrey' />";
+    echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-5m\";' value='Six months' class='bgrey' />";
     echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-1y\";' value='One year' class='bgrey' />";
 
     echo "</td></tr></table>";
@@ -291,18 +292,18 @@
         "--start", $start,
         "--title=$title",
         "--vertical-label=Temperature",
-   #     "--lower-limit=0",
+  #      "--lower-limit=10",
         "--height=$height",
         "--width=$width",
         "-cBACK#1a1a1a",
-        "-cCANVAS#1e1e1e",
+        "-cCANVAS#1a1a1a",
         "-cSHADEA#1a1a1a",
         "-cSHADEB#1a1a1a",
         "-cFONT#c7c7c7",
-        "-cGRID#77774470",
-        "-cMGRID#ffffff00",
+        "-cGRID#77774410",
+        "-cMGRID#1e90ff80",
         "-nTITLE:10",
-   #    "-nAXIS:10",
+        "-nAXIS:10",
    	"-nUNIT:10",
         "-cFRAME#1a1a1a",
 	"-cARROW#1a1a1a",
@@ -316,7 +317,6 @@
     	"LINE1:predict#477842:prediction",
  	"LINE1:smooth#aaaaaa:temp",
 
-    #    "COMMENT:\\n",e
     #    "GPRINT:transcalldatamax:LAST:Calls Now %6.2lf",
     #    "GPRINT:transcalldatamax:MAX:Data %6.2lf"
         "COMMENT:\\n"
