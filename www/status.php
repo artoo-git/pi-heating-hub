@@ -127,7 +127,8 @@
         #echo "0 timers results"; 
     }
     
-    $sql_active = "SELECT name from schedules WHERE active = 1;";
+    #$sql_active = "SELECT name from schedules WHERE active = 1;";
+    $sql_active = "SELECT * FROM schedules LEFT JOIN sched_sensor on schedules.id=sched_sensor.sched_id WHERE active = 1";
     $result_active = mysqli_query($conn, $sql_active);
     if (mysqli_num_rows($result_active) == 0) {
         #echo "No active schedules"; 
@@ -231,11 +232,12 @@
     echo "<table class='ttab'>";
     echo "<tr>";
     while($row = mysqli_fetch_assoc($result_active)) {
-	$ACTIVE = $row["name"];
+	    $ACTIVE = $row["name"];
+	    $TARGET = $row["value"];
 	if (is_null($ACTIVE)){
 		echo "<center>Active schedule: <b>none</b></center>"; 
    	}else{ 
-		echo "<center>Active schedule: <b>" . $ACTIVE . "</b></center>"; 
+		echo "<center>Active schedule: <b>" . $ACTIVE . "</b> and target temperature is <b>" . $TARGET . "</b></center>"; 
 	}
     }
  
@@ -271,7 +273,7 @@
     echo "</table>";
 
     echo "<table class='ttab'><tr><td>";
-    echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-3h\";' value='Three hours' class='bgrey' />";
+#    echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-3h\";' value='Three hours' class='bgrey' />";
     echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-12h\";' value='Twelve hours' class='bgrey' />";
     echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-24h\";' value='One Day' class='bgrey' />";
     echo "<input type='button' onclick='location.href=\"status.php?sid=$GET_SENSOR_ID&gid=$GET_SENSOR_ID&gsp=-3d\";' value='Three Days' class='bgrey' />";
@@ -289,7 +291,8 @@
 
       $options = array(
         "--slope-mode",
-        "--start", $start,
+	"--start", $start,
+#	"--end", "1",
         "--title=$title",
         "--vertical-label=Temperature",
   #      "--lower-limit=10",
@@ -321,7 +324,7 @@
     #    "GPRINT:transcalldatamax:MAX:Data %6.2lf"
         "COMMENT:\\n"
       );
-     $ret = rrd_graph( $output, $options );
+      $ret = rrd_graph( $output, $options );
       if (! $ret) {
         echo "<b>Graph error: </b>".rrd_error()."\n";
       }
