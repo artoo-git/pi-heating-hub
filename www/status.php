@@ -128,7 +128,8 @@
     }
     
     #$sql_active = "SELECT name from schedules WHERE active = 1;";
-    $sql_active = "SELECT * FROM schedules LEFT JOIN sched_sensor on schedules.id=sched_sensor.sched_id WHERE active = 1";
+    #$sql_active = "SELECT * FROM schedules LEFT JOIN sched_sensor on schedules.id=sched_sensor.sched_id WHERE active = 1";
+    $sql_active = "SELECT *, schedules.id as Sid, schedules.name as Sname, sensors.value as Svalue, sched_sensor.value as Tvalue FROM schedules LEFT JOIN sched_sensor ON schedules.id=sched_sensor.sched_id LEFT JOIN sensors ON sched_sensor.sensor_id=sensors.id WHERE active = 1";
     $result_active = mysqli_query($conn, $sql_active);
     if (mysqli_num_rows($result_active) == 0) {
         #echo "No active schedules"; 
@@ -232,12 +233,13 @@
     echo "<table class='ttab'>";
     echo "<tr>";
     while($row = mysqli_fetch_assoc($result_active)) {
-	    $ACTIVE = $row["name"];
-	    $TARGET = $row["value"];
+	    $ACTIVE = $row["Sname"];
+	    $TARGET = $row["Tvalue"];
+	    $ROOM = $row["name"];
 	if (is_null($ACTIVE)){
 		echo "<center>Active schedule: <b>none</b></center>"; 
    	}else{ 
-		echo "<center>Active schedule: <b>" . $ACTIVE . "</b> and target temperature is <b>" . $TARGET . "</b></center>"; 
+		echo "<center>Active schedule: <b>" . $ACTIVE . "</b> and target temperature is <b>" . $TARGET . "</b> in " . $ROOM . "</center>"; 
 	}
     }
  
