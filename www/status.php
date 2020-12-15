@@ -231,14 +231,14 @@
     
     echo "<table class='ttab'>";
     echo "<tr><center> Active schedule: ";
+    if (is_null(mysqli_fetch_assoc($result_active))){
+	    echo "<b>none</b></center>"; 
+    }else{
     while($row = mysqli_fetch_assoc($result_active)) {
 	    $ACTIVE = $row["Sname"];
 	    $TARGET = $row["Tvalue"];
 	    $ROOM = $row["name"];
-	if (is_null($ACTIVE)){
-		echo "<b>none</b></center>"; 
-   	}else{ 
-		echo "'<b>" . $ACTIVE . "</b>' and target temperature is <b>" . $TARGET . "</b> in " . $ROOM . "</center>"; 
+	    echo "'<b>" . $ACTIVE . "</b>' and target temperature is <b>" . $TARGET . "</b> in " . $ROOM . "</center>"; 
 	}
     }
  
