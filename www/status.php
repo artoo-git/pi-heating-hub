@@ -301,7 +301,7 @@
 #	"--end", "1",
         "--title=$title",
         "--vertical-label=Temperature",
-  #      "--lower-limit=10",
+	"--alt-autoscale",
         "--height=$height",
         "--width=$width",
         "-cBACK#1a1a1a",
@@ -316,16 +316,19 @@
    	"-nUNIT:10",
         "-cFRAME#1a1a1a",
 	"-cARROW#1a1a1a",
-#	"--alt-y-grid",
+	#	"--alt-y-grid",
+	"-u 22",
+	"-l 17",
+	"--left-axis-format=%.1lf",
         "DEF:callmax=$rrdfile:data:MAX",
    	"CDEF:transcalldatamax=callmax,1,*",
 	"CDEF:smooth=callmax,300,TREND",
 	"CDEF:predict=86400,-7,1800,callmax,PREDICT",
         "AREA:transcalldatamax#a6684210",
     #    "LINE1:transcalldatamax#a66842:readings",
-    	"LINE1:predict#477842:prediction",
- 	"LINE1:smooth#aaaaaa:temp",
-
+	"LINE1:smooth#aaaaaa:temp",
+	"LINE1:predict#477842:prediction",
+ 
     #    "GPRINT:transcalldatamax:LAST:Calls Now %6.2lf",
     #    "GPRINT:transcalldatamax:MAX:Data %6.2lf"
         "COMMENT:\\n"
